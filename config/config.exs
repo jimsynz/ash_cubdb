@@ -7,3 +7,7 @@ config :git_ops,
   manage_mix_version?: true,
   version_tag_prefix: "v",
   manage_readme_version: "README.md"
+
+if Mix.env() in ~w[dev test]a do
+  config :ash_cubdb, ash_apis: [Support.Api]
+end

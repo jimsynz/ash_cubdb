@@ -1,19 +1,16 @@
 defmodule AshCubDB.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
   @moduledoc false
 
   use Application
 
+  @doc false
   @impl true
   def start(_type, _args) do
     children = [
-      # Starts a worker by calling: AshCubDB.Worker.start_link(arg)
-      # {AshCubDB.Worker, arg}
+      {DynamicSupervisor, strategy: :one_for_one, name: AshCubDB.DynamicSupervisor},
+      {Registry, keys: :unique, name: AshCubDB.Registry}
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: AshCubDB.Supervisor]
     Supervisor.start_link(children, opts)
   end

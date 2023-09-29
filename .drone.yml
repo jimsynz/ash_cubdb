@@ -64,12 +64,11 @@ steps:
   commands:
   - asdf_install
   - rm -rf .asdf/downloads
-  - . $ASDF_DIR/asdf.sh
-  - mix local.hex --if-missing --force
-  - mix local.rebar --if-missing --force
-  - mix deps.get
-  - mix deps.compile
-  - mix dialyzer --plt
+  - asdf mix local.hex --if-missing --force
+  - asdf mix local.rebar --if-missing --force
+  - asdf mix deps.get
+  - asdf mix deps.compile
+  - asdf mix dialyzer --plt
 
 - name: store ASDF cache
   image: meltwater/drone-cache
@@ -281,10 +280,9 @@ steps:
       from_secret: DRONE_TOKEN
   commands:
     - git fetch --tags
-    - . $ASDF_DIR/asdf.sh
-    - mix git_ops.project_info --format=shell > before.env
-    - mix git_ops.release --yes --no-major || true
-    - mix git_ops.project_info --format=shell > after.env
+    - asdf mix git_ops.project_info --format=shell > before.env
+    - asdf mix git_ops.release --yes --no-major || true
+    - asdf mix git_ops.project_info --format=shell > after.env
     - . ./before.env
     - export OLD_APP_VERSION=$${APP_VERSION}
     - . ./after.env
@@ -320,13 +318,12 @@ steps:
     ASDF_DATA_DIR: /drone/src/.asdf
     ASDF_DIR: /root/.asdf
   commands:
-    - . $ASDF_DIR/asdf.sh
-    - mix git_ops.project_info --format=shell > app.env
+    - asdf mix git_ops.project_info --format=shell > app.env
     - . ./app.env
     - mkdir artifacts
-    - mix hex.build -o "artifacts/$${APP_NAME}-$${APP_VERSION}-pkg.tar"
+    - asdf mix hex.build -o "artifacts/$${APP_NAME}-$${APP_VERSION}-pkg.tar"
     - gzip "artifacts/$${APP_NAME}-$${APP_VERSION}-pkg.tar"
-    - mix docs
+    - asdf mix docs
     - tar zcvf "artifacts/$${APP_NAME}-$${APP_VERSION}-docs.tar.gz" doc/
     - git tag -l --format='%(contents:subject)' v$${APP_VERSION} > tag_subject
     - git tag -l --format='%(contents:body)' v$${APP_VERSION} > tag_body
@@ -394,5 +391,4 @@ steps:
     HEX_API_KEY:
       from_secret: HEX_API_KEY
   commands:
-    - . $ASDF_DIR/asdf.sh
-    - mix hex.publish --yes
+    - asdf mix hex.publish --yes

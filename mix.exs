@@ -78,7 +78,7 @@ defmodule AshCubDB.MixProject do
       {:faker, "~> 0.17", opts},
       {:git_ops, "~> 2.6", opts},
       {:mix_audit, "~> 2.1", opts},
-      {:smokestack, "~> 0.3", opts}
+      {:smokestack, "~> 0.4", opts}
     ]
   end
 

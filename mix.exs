@@ -38,7 +38,28 @@ defmodule AshCubDB.MixProject do
               type: "Ash.DataLayer"
             }
           ]
-        ]
+        ],
+        extras:
+          ["README.md"]
+          |> Enum.concat(Path.wildcard("documentation/**/*.{md,livemd,cheatmd}"))
+          |> Enum.map(fn
+            "README.md" -> {:"README.md", title: "Read Me", ash_hq?: false}
+            "documentation/" <> _ = path -> {String.to_atom(path), []}
+          end),
+        groups_for_extras:
+          "documentation/*"
+          |> Path.wildcard()
+          |> Enum.map(fn dir ->
+            name =
+              dir
+              |> Path.split()
+              |> List.last()
+              |> String.split(~r/_+/)
+              |> Enum.map_join(" ", &String.capitalize/1)
+
+            files = dir |> Path.join("**.{md,livemd,cheatmd}") |> Path.wildcard()
+            {name, files}
+          end)
       ]
     ]
   end

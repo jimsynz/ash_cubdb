@@ -6,6 +6,30 @@
 An [Ash DataLayer](https://ash-hq.org/docs/module/ash/latest/ash-datalayer)
 which adds support for [CubDB](https://hex.pm/packages/cubdb).
 
+## Status
+
+AshCubDb is still a work in progress.  Feel free to give it a go.
+
+| Feature                 | Status |
+|-------------------------|--------|
+| Create                  | ✅     |
+| Upsert (by primary key) | ✅     |
+| Upsert (by identity)    | ❌     |
+| Read (all)              | ✅     |
+| Read (by primary key)   | ✅     |
+| Read (filters)          | ✅     |
+| Read (sort)             | ✅     |
+| Read (calculations)     | ❌     |
+| Read (aggregates)       | ❌     |
+| Update                  | ❌     |
+| Destroy                 | ❌     |
+
+## Github Mirror
+
+This repository is mirrored [on Github](https://github.com/jimsynz/smokestack)
+from it's primary location [on my Forejo instance](https://code.harton.nz/james/ash_cubdb).
+Feel free to raise issues and open PRs on Github.
+
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed

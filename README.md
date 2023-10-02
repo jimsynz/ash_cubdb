@@ -19,7 +19,8 @@ AshCubDb is still a work in progress.  Feel free to give it a go.
 | Read (by primary key)   | ✅     |
 | Read (filters)          | ✅     |
 | Read (sort)             | ✅     |
-| Read (calculations)     | ❌     |
+| Read (distinct sort)    | ✅     |
+| Read (calculations)     | ✅     |
 | Read (aggregates)       | ❌     |
 | Update                  | ✅     |
 | Destroy                 | ✅     |

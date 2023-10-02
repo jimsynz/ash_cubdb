@@ -7,28 +7,28 @@ defmodule Support.Author do
   end
 
   multitenancy do
-    strategy(:context)
-    global?(true)
+    strategy :context
+    global? true
   end
 
   attributes do
-    uuid_primary_key(:id)
+    uuid_primary_key :id
 
-    attribute(:name, :ci_string)
+    attribute :name, :ci_string
   end
 
   relationships do
-    has_many(:posts, Support.Post)
+    has_many :posts, Support.Post
   end
 
   actions do
-    defaults(~w[create read]a)
+    defaults ~w[create read]a
   end
 
   code_interface do
-    define_for(Support.Api)
+    define_for Support.Api
 
-    define(:create)
-    define(:read)
+    define :create
+    define :read
   end
 end

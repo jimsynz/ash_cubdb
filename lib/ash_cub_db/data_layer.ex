@@ -57,10 +57,15 @@ defmodule AshCubDB.DataLayer do
   def can?(resource, :read), do: Dir.readable?(resource)
   def can?(_, :multitenancy), do: true
   def can?(_, :filter), do: true
+  def can?(_, :limit), do: true
+  def can?(_, :offset), do: true
+  def can?(_, :distinct), do: true
+  def can?(_, :distinct_sort), do: true
   def can?(_, {:filter_expr, _}), do: true
   def can?(_, :boolean_filter), do: true
   def can?(_, :sort), do: true
   def can?(_, {:sort, _}), do: true
+  def can?(_, :nested_expressions), do: true
 
   def can?(resource, capability) do
     if Application.get_env(:ash_cubdb, :debug_data_layer_capabilities?, false) do

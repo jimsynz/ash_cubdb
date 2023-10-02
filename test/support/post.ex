@@ -19,6 +19,10 @@ defmodule Support.Post do
     defaults ~w[create read update destroy]a
   end
 
+  calculations do
+    calculate :all_text, :string, expr(title <> body)
+  end
+
   relationships do
     belongs_to :author, Support.Author
   end

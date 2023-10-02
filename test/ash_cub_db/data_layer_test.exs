@@ -1,4 +1,5 @@
 defmodule AshCubDB.DataLayerTest do
+  @moduledoc false
   use ExUnit.Case, async: true
   alias Ash.{Error.Query.NotFound, Query}
   alias AshCubDB.Info
@@ -140,6 +141,51 @@ defmodule AshCubDB.DataLayerTest do
 
       assert Enum.map(sorted, &to_string(&1.name)) == ["Mallory", "Bob", "Alice"]
     end
+
+    test "limit" do
+      insert!(Author, count: 3)
+
+      assert [_] =
+               Author
+               |> Query.limit(1)
+               |> Api.read!()
+    end
+
+    test "offset" do
+      insert(Author, count: 3)
+
+      assert [_, _] =
+               Author
+               |> Query.offset(1)
+               |> Api.read!()
+    end
+
+    test "distinct" do
+      author = insert!(Author)
+      insert!(Author, count: 3, attrs: %{name: author.name})
+
+      assert [selected] =
+               Author
+               |> Query.distinct(:name)
+               |> Api.read!()
+
+      assert selected.name == author.name
+    end
+
+    test "distinct sort" do
+      post = insert!(Post, attrs: %{body: "Alice is cool"})
+      insert!(Post, attrs: %{title: post.title, body: "Bob is cool"})
+      insert!(Post, attrs: %{title: post.title, body: "Mallory is cool"})
+
+      assert [selected] =
+               Post
+               |> Query.distinct(:title)
+               |> Query.distinct_sort(body: :desc)
+               |> Api.read!()
+
+      assert selected.title == post.title
+      assert selected.body == "Mallory is cool"
+    end
   end
 
   describe "update" do
@@ -163,6 +209,15 @@ defmodule AshCubDB.DataLayerTest do
 
       assert :ok = Post.destroy(post)
       assert {:error, %NotFound{}} = Post.get(post.id)
+    end
+  end
+
+  describe "calculations" do
+    test "can be loaded" do
+      post = insert!(Post)
+      {:ok, post} = Post.get(post.id, load: :all_text)
+
+      assert post.all_text == post.title <> post.body
     end
   end
 

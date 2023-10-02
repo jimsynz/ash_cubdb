@@ -126,6 +126,7 @@ defmodule AshCubDB.DataLayer do
          {:ok, db} <- start(resource),
          {:ok, record} <- Changeset.apply_attributes(changeset),
          {:ok, key, data} <- Serde.serialise(record),
+         {:ok, key} <- maybe_wrap_in_tenant(key, changeset),
          true <- CubDB.has_key?(db, key),
          :ok <- CubDB.put(db, key, data) do
       {:ok, set_loaded(record)}

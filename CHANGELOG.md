@@ -5,6 +5,15 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.3.0](https://code.harton.nz/james/ash_cubdb/compare/v0.2.0...v0.3.0) (2023-10-02)
+
+
+
+
+### Features:
+
+* Support updating existing records.
+
 ## [v0.2.0](https://code.harton.nz/james/ash_cubdb/compare/v0.1.0...v0.2.0) (2023-09-29)
 
 

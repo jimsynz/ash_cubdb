@@ -5,6 +5,19 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.4.0](https://code.harton.nz/james/ash_cubdb/compare/v0.3.1...v0.4.0) (2023-10-02)
+
+
+
+
+### Features:
+
+* Support destroying records.
+
+### Bug Fixes:
+
+* honour tenancy when updating.
+
 ## [v0.3.1](https://code.harton.nz/james/ash_cubdb/compare/v0.3.0...v0.3.1) (2023-10-02)
 
 

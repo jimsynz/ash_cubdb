@@ -21,7 +21,7 @@ AshCubDb is still a work in progress.  Feel free to give it a go.
 | Read (sort)             | ✅     |
 | Read (calculations)     | ❌     |
 | Read (aggregates)       | ❌     |
-| Update                  | ❌     |
+| Update                  | ✅     |
 | Destroy                 | ❌     |
 
 ## Github Mirror

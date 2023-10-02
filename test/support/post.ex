@@ -7,27 +7,29 @@ defmodule Support.Post do
   end
 
   attributes do
-    uuid_primary_key(:id) do
-      writable?(true)
+    uuid_primary_key :id do
+      writable? true
     end
 
-    attribute(:title, :string)
-    attribute(:body, :string)
+    attribute :title, :string
+    attribute :body, :string
   end
 
   actions do
     # defaults ~w[create read update destroy]a
-    defaults(~w[create read]a)
+    defaults ~w[create read update]a
   end
 
   relationships do
-    belongs_to(:author, Support.Author)
+    belongs_to :author, Support.Author
   end
 
   code_interface do
-    define_for(Support.Api)
+    define_for Support.Api
 
-    define(:create)
-    define(:read)
+    define :create
+    define :read
+    define :update
+    define :get, action: :read, get_by: [:id]
   end
 end

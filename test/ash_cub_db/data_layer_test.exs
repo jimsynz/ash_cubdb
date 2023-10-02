@@ -129,6 +129,21 @@ defmodule AshCubDB.DataLayerTest do
     end
   end
 
+  describe "update" do
+    test "records can be updated" do
+      post = insert!(Post)
+      params = Post |> params!() |> Map.take([:title])
+
+      assert {:ok, updated} = Post.update(post, params)
+      assert updated.id == post.id
+      assert updated.title == params.title
+
+      assert {:ok, updated} = Post.get(post.id)
+      assert updated.id == post.id
+      assert updated.title == params.title
+    end
+  end
+
   defp dump(resource) do
     resource
     |> via()

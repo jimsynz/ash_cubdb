@@ -10,4 +10,6 @@ config :git_ops,
 
 if Mix.env() in ~w[dev test]a do
   config :ash_cubdb, ash_apis: [Support.Api]
+
+  config :spark, :formatter, remove_parens?: true
 end

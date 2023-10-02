@@ -14,6 +14,7 @@ defmodule AshCubDB.DataLayer do
     Changeset,
     Error,
     Error.Changes.InvalidAttribute,
+    Error.Changes.StaleRecord,
     Error.Invalid.TenantRequired,
     Filter.Runtime,
     Resource
@@ -50,6 +51,7 @@ defmodule AshCubDB.DataLayer do
   @doc false
   @impl true
   def can?(resource, :create), do: Dir.writable?(resource)
+  def can?(resource, :update), do: Dir.writable?(resource)
   def can?(resource, :upsert), do: Dir.writable?(resource)
   def can?(resource, :read), do: Dir.readable?(resource)
   def can?(_, :multitenancy), do: true
@@ -104,6 +106,22 @@ defmodule AshCubDB.DataLayer do
 
       true ->
         do_search_upsert(resource, changeset, keys)
+    end
+  end
+
+  @doc false
+  @impl true
+  def update(resource, changeset) do
+    with :ok <- validate_tenant_configuration(resource, changeset.tenant),
+         {:ok, db} <- start(resource),
+         {:ok, record} <- Changeset.apply_attributes(changeset),
+         {:ok, key, data} <- Serde.serialise(record),
+         true <- CubDB.has_key?(db, key),
+         :ok <- CubDB.put(db, key, data) do
+      {:ok, set_loaded(record)}
+    else
+      false -> {:error, StaleRecord.exception(resource: resource)}
+      {:error, reason} -> {:error, Ash.Error.to_ash_error(reason)}
     end
   end
 

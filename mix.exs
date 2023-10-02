@@ -23,7 +23,7 @@ defmodule AshCubDB.MixProject do
       aliases: aliases(),
       dialyzer: [plt_add_apps: [:faker, :smokestack]],
       docs: [
-        main: "AshCubDB",
+        main: "readme",
         extra_section: "Guides",
         formatters: ["html"],
         filter_modules: ~r/^Elixir.AshCubDB/,

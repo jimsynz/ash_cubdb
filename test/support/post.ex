@@ -16,8 +16,7 @@ defmodule Support.Post do
   end
 
   actions do
-    # defaults ~w[create read update destroy]a
-    defaults ~w[create read update]a
+    defaults ~w[create read update destroy]a
   end
 
   relationships do
@@ -31,5 +30,6 @@ defmodule Support.Post do
     define :read
     define :update
     define :get, action: :read, get_by: [:id]
+    define :destroy
   end
 end

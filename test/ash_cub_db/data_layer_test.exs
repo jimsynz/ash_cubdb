@@ -1,6 +1,6 @@
 defmodule AshCubDB.DataLayerTest do
   use ExUnit.Case, async: true
-  alias Ash.Query
+  alias Ash.{Error.Query.NotFound, Query}
   alias AshCubDB.Info
   alias Support.{Api, Author, Post}
   import Support.Factory
@@ -154,6 +154,15 @@ defmodule AshCubDB.DataLayerTest do
       assert {:ok, updated} = Post.get(post.id)
       assert updated.id == post.id
       assert updated.title == params.title
+    end
+  end
+
+  describe "destroy" do
+    test "records can be destroyed" do
+      post = insert!(Post)
+
+      assert :ok = Post.destroy(post)
+      assert {:error, %NotFound{}} = Post.get(post.id)
     end
   end
 

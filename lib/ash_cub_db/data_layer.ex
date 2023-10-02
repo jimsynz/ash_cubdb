@@ -53,6 +53,7 @@ defmodule AshCubDB.DataLayer do
   def can?(resource, :create), do: Dir.writable?(resource)
   def can?(resource, :update), do: Dir.writable?(resource)
   def can?(resource, :upsert), do: Dir.writable?(resource)
+  def can?(resource, :destroy), do: Dir.writable?(resource)
   def can?(resource, :read), do: Dir.readable?(resource)
   def can?(_, :multitenancy), do: true
   def can?(_, :filter), do: true
@@ -133,6 +134,21 @@ defmodule AshCubDB.DataLayer do
     else
       false -> {:error, StaleRecord.exception(resource: resource)}
       {:error, reason} -> {:error, Ash.Error.to_ash_error(reason)}
+    end
+  end
+
+  @doc false
+  @impl true
+  def destroy(resource, changeset) do
+    with :ok <- validate_tenant_configuration(resource, changeset.tenant),
+         {:ok, db} <- start(resource),
+         {:ok, key, _data} <- Serde.serialise(changeset.data),
+         {:ok, key} <- maybe_wrap_in_tenant(key, changeset),
+         true <- CubDB.has_key?(db, key) do
+      CubDB.delete(db, key)
+    else
+      false -> {:error, StaleRecord.exception(resource: resource)}
+      {:error, reason} -> {:error, reason}
     end
   end
 

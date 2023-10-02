@@ -127,6 +127,19 @@ defmodule AshCubDB.DataLayerTest do
 
       assert expected.id == actual.id
     end
+
+    test "sorting" do
+      insert!(Author, attrs: %{name: "Alice"})
+      insert!(Author, attrs: %{name: "Mallory"})
+      insert!(Author, attrs: %{name: "Bob"})
+
+      sorted =
+        Author
+        |> Query.sort(name: :desc)
+        |> Api.read!()
+
+      assert Enum.map(sorted, &to_string(&1.name)) == ["Mallory", "Bob", "Alice"]
+    end
   end
 
   describe "update" do

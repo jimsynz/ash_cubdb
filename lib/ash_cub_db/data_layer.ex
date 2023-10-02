@@ -58,7 +58,17 @@ defmodule AshCubDB.DataLayer do
   def can?(_, :filter), do: true
   def can?(_, {:filter_expr, _}), do: true
   def can?(_, :boolean_filter), do: true
-  def can?(_, _), do: false
+  def can?(_, :sort), do: true
+  def can?(_, {:sort, _}), do: true
+
+  def can?(resource, capability) do
+    if Application.get_env(:ash_cubdb, :debug_data_layer_capabilities?, false) do
+      # credo:disable-for-next-line Credo.Check.Warning.Dbg
+      dbg(resource: resource, capability: capability)
+    end
+
+    false
+  end
 
   @doc false
   @impl true
@@ -266,7 +276,7 @@ defmodule AshCubDB.DataLayer do
     |> Runtime.filter_matches(records, query.filter, parent: parent)
   end
 
-  defp runtime_sort(records, query) do
+  defp runtime_sort(records, query) when is_list(records) do
     records =
       records
       |> Sort.runtime_sort(query.distinct_sort || query.sort, api: query.api)
@@ -277,6 +287,8 @@ defmodule AshCubDB.DataLayer do
 
     {:ok, records}
   end
+
+  defp runtime_sort(records, query), do: records |> Enum.to_list() |> runtime_sort(query)
 
   defp do_limit(records, :infinity), do: records
   defp do_limit(records, limit), do: Enum.take(records, limit)

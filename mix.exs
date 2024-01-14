@@ -29,37 +29,16 @@ defmodule AshCubDB.MixProject do
         filter_modules: ~r/^Elixir.AshCubDB/,
         source_url_pattern:
           "https://code.harton.nz/james/ash_cub_db/src/branch/main/%{path}#L%{line}",
-        spark: [
-          extensions: [
-            %{
-              module: AshCubDB.DataLayer,
-              name: "AshCubDB.DataLayer",
-              target: "Ash.Resource",
-              type: "Ash.DataLayer"
-            }
-          ]
+        extras: [
+          "README.md",
+          "documentation/dsls/DSL:-AshCubDB.DataLayer.cheatmd"
         ],
-        extras:
-          ["README.md"]
-          |> Enum.concat(Path.wildcard("documentation/**/*.{md,livemd,cheatmd}"))
-          |> Enum.map(fn
-            "README.md" -> {:"README.md", title: "Read Me", ash_hq?: false}
-            "documentation/" <> _ = path -> {String.to_atom(path), []}
-          end),
-        groups_for_extras:
-          "documentation/*"
-          |> Path.wildcard()
-          |> Enum.map(fn dir ->
-            name =
-              dir
-              |> Path.split()
-              |> List.last()
-              |> String.split(~r/_+/)
-              |> Enum.map_join(" ", &String.capitalize/1)
-
-            files = dir |> Path.join("**.{md,livemd,cheatmd}") |> Path.wildcard()
-            {name, files}
-          end)
+        groups_for_extras: [
+          Tutorials: ~r'documentation/tutorials',
+          "How To": ~r'documentation/how_to',
+          Topics: ~r'documentation/topics',
+          DSLs: ~r'documentation/dsls'
+        ]
       ]
     ]
   end
@@ -90,10 +69,10 @@ defmodule AshCubDB.MixProject do
       {:ash, "~> 2.13"},
       {:cubdb, "~> 2.0"},
       {:spark, "~> 1.1 and >= 1.1.39"},
+      {:earmark, ">= 0.0.0"},
       {:credo, "~> 1.7", opts},
       {:dialyxir, "~> 1.3", opts},
       {:doctor, "~> 0.21", opts},
-      {:earmark, ">= 0.0.0", opts},
       {:ex_check, "~> 0.15", opts},
       {:ex_doc, ">= 0.0.0", opts},
       {:faker, "~> 0.17", opts},

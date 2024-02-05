@@ -31,7 +31,7 @@ defmodule AshCubDB.MixProject do
           "https://harton.dev/james/ash_cub_db/src/branch/main/%{path}#L%{line}",
         extras: [
           "README.md",
-          "documentation/dsls/DSL:-AshCubDB.DataLayer.cheatmd"
+          "documentation/dsls/DSL:-AshCubDB.DataLayer.md"
         ],
         groups_for_extras: [
           Tutorials: ~r'documentation/tutorials',

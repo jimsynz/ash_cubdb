@@ -18,8 +18,8 @@ defmodule AshCubDB.MixProject do
       deps: deps(),
       description: @moduledoc,
       package: package(),
-      source_url: "https://code.harton.nz/james/ash_cubdb",
-      homepage_url: "https://code.harton.nz/james/ash_cubdb",
+      source_url: "https://harton.dev/james/ash_cubdb",
+      homepage_url: "https://harton.dev/james/ash_cubdb",
       aliases: aliases(),
       dialyzer: [plt_add_apps: [:faker, :smokestack]],
       docs: [
@@ -28,7 +28,7 @@ defmodule AshCubDB.MixProject do
         formatters: ["html"],
         filter_modules: ~r/^Elixir.AshCubDB/,
         source_url_pattern:
-          "https://code.harton.nz/james/ash_cub_db/src/branch/main/%{path}#L%{line}",
+          "https://harton.dev/james/ash_cub_db/src/branch/main/%{path}#L%{line}",
         extras: [
           "README.md",
           "documentation/dsls/DSL:-AshCubDB.DataLayer.cheatmd"
@@ -48,7 +48,7 @@ defmodule AshCubDB.MixProject do
       maintainers: ["James Harton <james@harton.nz>"],
       licenses: ["HL3-FULL"],
       links: %{
-        "Source" => "https://code.harton.nz/james/ash_cubdb"
+        "Source" => "https://harton.dev/james/ash_cubdb"
       }
     ]
   end

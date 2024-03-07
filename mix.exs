@@ -31,6 +31,7 @@ defmodule AshCubDB.MixProject do
           "https://harton.dev/james/ash_cub_db/src/branch/main/%{path}#L%{line}",
         extras: [
           "README.md",
+          "CHANGELOG.md",
           "documentation/dsls/DSL:-AshCubDB.DataLayer.md"
         ],
         groups_for_extras: [
@@ -48,7 +49,10 @@ defmodule AshCubDB.MixProject do
       maintainers: ["James Harton <james@harton.nz>"],
       licenses: ["HL3-FULL"],
       links: %{
-        "Source" => "https://harton.dev/james/ash_cubdb"
+        "Source" => "https://harton.dev/james/ash_cubdb",
+        "GitHub" => "https://github.com/jimsynz/ash_cubdb",
+        "Changelog" => "https://docs.harton.nz/james/ash_cubdb/changelog.html",
+        "Sponsor" => "https://github.com/sponsors/jimsynz"
       }
     ]
   end

@@ -30,7 +30,7 @@ AshCubDb is still a work in progress. Feel free to give it a go.
 ## Github Mirror
 
 This repository is mirrored [on Github](https://github.com/jimsynz/ash_cubdb)
-from it's primary location [on my Forejo instance](https://harton.dev/james/ash_cubdb).
+from it's primary location [on my Forgejo instance](https://harton.dev/james/ash_cubdb).
 Feel free to raise issues and open PRs on Github.
 
 ## Installation

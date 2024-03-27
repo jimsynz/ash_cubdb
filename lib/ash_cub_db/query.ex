@@ -3,10 +3,10 @@ defmodule AshCubDB.Query do
   A struct which holds information about a resource query as it is being built.
   """
 
-  alias Ash.{Api, Filter, Resource}
+  alias Ash.{Domain, Filter, Resource}
 
   defstruct aggregates: [],
-            api: nil,
+            domain: nil,
             calculations: [],
             distinct: nil,
             distinct_sort: nil,
@@ -20,7 +20,7 @@ defmodule AshCubDB.Query do
 
   @type t :: %__MODULE__{
           aggregates: [Resource.Aggregate.t()],
-          api: Api.t(),
+          domain: Domain.t(),
           calculations: [Resource.Calculation.t()],
           distinct: Ash.Sort.t(),
           distinct_sort: Ash.Sort.t(),

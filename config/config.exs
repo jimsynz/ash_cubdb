@@ -9,7 +9,7 @@ config :git_ops,
   manage_readme_version: "README.md"
 
 if Mix.env() in ~w[dev test]a do
-  config :ash_cubdb, ash_apis: [Support.Api]
+  config :ash_cubdb, ash_domains: [Support.Domain]
   config :ash_cubdb, debug_data_layer_capabilities?: true
 
   config :spark, :formatter, remove_parens?: true

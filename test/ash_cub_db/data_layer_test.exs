@@ -3,7 +3,7 @@ defmodule AshCubDB.DataLayerTest do
   use ExUnit.Case, async: true
   alias Ash.{Error.Query.NotFound, Query}
   alias AshCubDB.Info
-  alias Support.{Api, Author, Post}
+  alias Support.{Domain, Author, Post}
   import Support.Factory
   require Query
 
@@ -105,7 +105,7 @@ defmodule AshCubDB.DataLayerTest do
       insert!(Author, count: 3)
 
       expected =
-        Author
+        Post
         |> params!(count: 3)
         |> Enum.map(&Post.create!(&1, tenant: :wat))
 
@@ -124,7 +124,7 @@ defmodule AshCubDB.DataLayerTest do
       [actual] =
         Author
         |> Query.filter(name: "Marty McFly")
-        |> Api.read!()
+        |> Domain.read!()
 
       assert expected.id == actual.id
     end
@@ -137,7 +137,7 @@ defmodule AshCubDB.DataLayerTest do
       sorted =
         Author
         |> Query.sort(name: :desc)
-        |> Api.read!()
+        |> Domain.read!()
 
       assert Enum.map(sorted, &to_string(&1.name)) == ["Mallory", "Bob", "Alice"]
     end
@@ -148,7 +148,7 @@ defmodule AshCubDB.DataLayerTest do
       assert [_] =
                Author
                |> Query.limit(1)
-               |> Api.read!()
+               |> Domain.read!()
     end
 
     test "offset" do
@@ -157,7 +157,7 @@ defmodule AshCubDB.DataLayerTest do
       assert [_, _] =
                Author
                |> Query.offset(1)
-               |> Api.read!()
+               |> Domain.read!()
     end
 
     test "distinct" do
@@ -167,7 +167,7 @@ defmodule AshCubDB.DataLayerTest do
       assert [selected] =
                Author
                |> Query.distinct(:name)
-               |> Api.read!()
+               |> Domain.read!()
 
       assert selected.name == author.name
     end
@@ -181,7 +181,7 @@ defmodule AshCubDB.DataLayerTest do
                Post
                |> Query.distinct(:title)
                |> Query.distinct_sort(body: :desc)
-               |> Api.read!()
+               |> Domain.read!()
 
       assert selected.title == post.title
       assert selected.body == "Mallory is cool"

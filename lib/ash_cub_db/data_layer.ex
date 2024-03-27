@@ -173,7 +173,7 @@ defmodule AshCubDB.DataLayer do
 
   @doc false
   @impl true
-  def resource_to_query(resource, api), do: %Query{resource: resource, api: api}
+  def resource_to_query(resource, domain), do: %Query{resource: resource, domain: domain}
 
   @doc false
   @impl true
@@ -294,16 +294,16 @@ defmodule AshCubDB.DataLayer do
       stream
       |> Enum.to_list()
 
-    query.api
+    query.domain
     |> Runtime.filter_matches(records, query.filter, parent: parent)
   end
 
   defp runtime_sort(records, query) when is_list(records) do
     records =
       records
-      |> Sort.runtime_sort(query.distinct_sort || query.sort, api: query.api)
-      |> Sort.runtime_distinct(query.distinct, api: query.api)
-      |> Sort.runtime_sort(query.sort, api: query.api)
+      |> Sort.runtime_sort(query.distinct_sort || query.sort, domain: query.domain)
+      |> Sort.runtime_distinct(query.distinct, domain: query.domain)
+      |> Sort.runtime_sort(query.sort, domain: query.domain)
       |> Enum.drop(query.offset || 0)
       |> do_limit(query.limit)
 

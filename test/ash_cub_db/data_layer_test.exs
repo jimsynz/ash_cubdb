@@ -3,7 +3,7 @@ defmodule AshCubDB.DataLayerTest do
   use ExUnit.Case, async: true
   alias Ash.{Error.Query.NotFound, Query}
   alias AshCubDB.Info
-  alias Support.{Domain, Author, Post}
+  alias Support.{Author, Domain, Post}
   import Support.Factory
   require Query
 

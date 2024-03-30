@@ -41,7 +41,7 @@ by adding `ash_cubdb` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:ash_cubdb, "~> 0.6.1-rc.0"}
+    {:ash_cubdb, "~> 0.6.1"}
   ]
 end
 ```

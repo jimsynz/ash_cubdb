@@ -124,7 +124,7 @@ defmodule AshCubDB.DataLayerTest do
       [actual] =
         Author
         |> Query.filter(name: "Marty McFly")
-        |> Domain.read!()
+        |> Ash.read!()
 
       assert expected.id == actual.id
     end
@@ -137,7 +137,7 @@ defmodule AshCubDB.DataLayerTest do
       sorted =
         Author
         |> Query.sort(name: :desc)
-        |> Domain.read!()
+        |> Ash.read!()
 
       assert Enum.map(sorted, &to_string(&1.name)) == ["Mallory", "Bob", "Alice"]
     end
@@ -148,7 +148,7 @@ defmodule AshCubDB.DataLayerTest do
       assert [_] =
                Author
                |> Query.limit(1)
-               |> Domain.read!()
+               |> Ash.read!()
     end
 
     test "offset" do
@@ -157,7 +157,7 @@ defmodule AshCubDB.DataLayerTest do
       assert [_, _] =
                Author
                |> Query.offset(1)
-               |> Domain.read!()
+               |> Ash.read!()
     end
 
     test "distinct" do
@@ -167,7 +167,7 @@ defmodule AshCubDB.DataLayerTest do
       assert [selected] =
                Author
                |> Query.distinct(:name)
-               |> Domain.read!()
+               |> Ash.read!()
 
       assert selected.name == author.name
     end
@@ -181,7 +181,7 @@ defmodule AshCubDB.DataLayerTest do
                Post
                |> Query.distinct(:title)
                |> Query.distinct_sort(body: :desc)
-               |> Domain.read!()
+               |> Ash.read!()
 
       assert selected.title == post.title
       assert selected.body == "Mallory is cool"

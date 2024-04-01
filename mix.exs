@@ -70,7 +70,7 @@ defmodule AshCubDB.MixProject do
     opts = [only: ~w[dev test]a, runtime: false]
 
     [
-      {:ash, "== 3.0.0-rc.5"},
+      {:ash, "== 3.0.0-rc.7"},
       {:cubdb, "~> 2.0"},
       {:spark, "~> 2.1"},
       {:earmark, ">= 0.0.0"},
@@ -82,7 +82,7 @@ defmodule AshCubDB.MixProject do
       {:faker, "~> 0.18", opts},
       {:git_ops, "~> 2.6", opts},
       {:mix_audit, "~> 2.1", opts},
-      {:smokestack, "== 0.6.1-rc.0", opts}
+      {:smokestack, "== 0.6.1-rc.1", opts}
     ]
   end
 

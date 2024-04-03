@@ -70,7 +70,7 @@ defmodule AshCubDB.MixProject do
     opts = [only: ~w[dev test]a, runtime: false]
 
     [
-      {:ash, "== 3.0.0-rc.7"},
+      {:ash, "== 3.0.0-rc.8"},
       {:cubdb, "~> 2.0"},
       {:spark, "~> 2.1"},
       {:earmark, ">= 0.0.0"},

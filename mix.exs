@@ -1,7 +1,7 @@
 defmodule AshCubDB.MixProject do
   use Mix.Project
 
-  @version "0.6.1-rc.1"
+  @version "0.6.1-rc.2"
 
   @moduledoc """
   A CubDB data layer for `Ash` resources.

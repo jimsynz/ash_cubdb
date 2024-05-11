@@ -5,6 +5,19 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.6.2](https://harton.dev/james/ash_cubdb/compare/v0.6.1-rc.2...v0.6.2) (2024-05-11)
+
+
+
+
+### Bug Fixes:
+
+* deprecation warnings in tests.
+
+### Improvements:
+
+* Relax RC version dependencies.
+
 ## [v0.6.1-rc.2](https://harton.dev/james/ash_cubdb/compare/v0.6.1-rc.1...v0.6.1-rc.2) (2024-04-03)
 
 

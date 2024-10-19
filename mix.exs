@@ -32,7 +32,7 @@ defmodule AshCubDB.MixProject do
         extras: [
           "README.md",
           "CHANGELOG.md",
-          "documentation/dsls/DSL:-AshCubDB.DataLayer.md"
+          "documentation/dsls/DSL-AshCubDB.DataLayer.md"
         ],
         groups_for_extras: [
           Tutorials: ~r'documentation/tutorials',

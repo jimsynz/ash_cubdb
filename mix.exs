@@ -76,7 +76,7 @@ defmodule AshCubDB.MixProject do
       {:earmark, ">= 0.0.0"},
       {:credo, "~> 1.7", opts},
       {:dialyxir, "~> 1.3", opts},
-      {:doctor, "~> 0.21", opts},
+      {:doctor, "~> 0.22", opts},
       {:ex_check, "~> 0.16", opts},
       {:ex_doc, ">= 0.0.0", opts},
       {:faker, "~> 0.18", opts},

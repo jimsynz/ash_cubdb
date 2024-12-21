@@ -81,6 +81,7 @@ defmodule AshCubDB.MixProject do
       {:ex_doc, ">= 0.0.0", opts},
       {:faker, "~> 0.18", opts},
       {:git_ops, "~> 2.6", opts},
+      {:igniter, "~> 0.5", Keyword.put(opts, :optional, true)},
       {:mix_audit, "~> 2.1", opts},
       {:smokestack, "~> 0.9.0", opts}
     ]

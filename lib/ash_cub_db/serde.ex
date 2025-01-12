@@ -54,7 +54,7 @@ defmodule AshCubDB.Serde do
       with {:ok, value} <- fetch_record_attribute(record, attr),
            {:ok, attr} <- fetch_attribute_definition(record.__struct__, attr),
            {:ok, casted} <- Type.dump_to_native(attr.type, value, attr.constraints) do
-        {:cont, {:ok, Tuple.append(result, casted)}}
+        {:cont, {:ok, :erlang.append_element(result, casted)}}
       else
         :error -> {:halt, {:error, "Failed to dump value as type `#{attr.type}`"}}
         {:error, reason} -> {:halt, {:error, reason}}

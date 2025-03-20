@@ -208,7 +208,7 @@ defmodule AshCubDB.DataLayerTest do
       post = insert!(Post)
 
       assert :ok = Post.destroy(post)
-      assert {:error, %NotFound{}} = Post.get(post.id)
+      assert {:error, %{errors: [%NotFound{}]}} = Post.get(post.id)
     end
   end
 

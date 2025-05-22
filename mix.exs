@@ -73,7 +73,6 @@ defmodule AshCubDB.MixProject do
       {:ash, "~> 3.0"},
       {:cubdb, "~> 2.0"},
       {:spark, "~> 2.1"},
-      {:earmark, ">= 0.0.0"},
       {:credo, "~> 1.7", opts},
       {:dialyxir, "~> 1.3", opts},
       {:doctor, "~> 0.22", opts},

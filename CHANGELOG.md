@@ -5,6 +5,15 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.6.3](https://harton.dev/james/ash_cubdb/compare/v0.6.2...v0.6.3) (2026-01-21)
+
+
+
+
+### Bug Fixes:
+
+* deps: update ash to address security vulnerability (#357)
+
 ## [v0.6.2](https://harton.dev/james/ash_cubdb/compare/v0.6.1-rc.2...v0.6.2) (2024-05-11)
 
 

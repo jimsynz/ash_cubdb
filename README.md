@@ -1,6 +1,5 @@
 # AshCubDB
 
-[![Build Status](https://drone.harton.dev/api/badges/james/ash_cubdb/status.svg?ref=refs/heads/main)](https://drone.harton.dev/james/ash_cubdb)
 [![Hex.pm](https://img.shields.io/hexpm/v/ash_cubdb.svg)](https://hex.pm/packages/ash_cubdb)
 [![Hippocratic License HL3-FULL](https://img.shields.io/static/v1?label=Hippocratic%20License&message=HL3-FULL&labelColor=5e2751&color=bc8c3d)](https://firstdonoharm.dev/version/3/0/full.html)
 
@@ -47,8 +46,7 @@ end
 ```
 
 Documentation for the latest release can be found on
-[HexDocs](https://hexdocs.pm/ash_cubdb) and for the `main` branch on
-[docs.harton.nz](https://docs.harton.nz/james/ash_cubdb).
+[HexDocs](https://hexdocs.pm/ash_cubdb).
 
 ## License
 

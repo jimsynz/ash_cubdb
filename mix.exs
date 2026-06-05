@@ -21,7 +21,6 @@ defmodule AshCubDB.MixProject do
       source_url: "https://harton.dev/james/ash_cubdb",
       homepage_url: "https://harton.dev/james/ash_cubdb",
       aliases: aliases(),
-      dialyzer: [plt_add_apps: [:smokestack]],
       docs: [
         main: "readme",
         extra_section: "Guides",
@@ -81,8 +80,7 @@ defmodule AshCubDB.MixProject do
       {:ex_doc, ">= 0.0.0", opts},
       {:git_ops, "~> 2.6", opts},
       {:igniter, "~> 0.8", Keyword.put(opts, :optional, true)},
-      {:mix_audit, "~> 2.1", opts},
-      {:smokestack, "~> 0.9.0", opts}
+      {:mix_audit, "~> 2.1", opts}
     ]
   end
 

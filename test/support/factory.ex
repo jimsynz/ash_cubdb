@@ -1,13 +1,37 @@
 defmodule Support.Factory do
   @moduledoc false
-  use Smokestack
+  alias Support.{Author, Post}
 
-  factory Support.Post do
-    attribute(:title, &Support.Random.sentence/0)
-    attribute(:body, &Support.Random.paragraph/0)
+  def params!(resource, options \\ [])
+
+  def params!(resource, options) do
+    case Keyword.get(options, :count) do
+      nil -> build_attrs(resource, options)
+      count -> Enum.map(1..count, fn _ -> build_attrs(resource, options) end)
+    end
   end
 
-  factory Support.Author do
-    attribute(:name, &Support.Random.name/0)
+  def insert!(resource, options \\ []) do
+    Ash.Seed.seed!(resource, params!(resource, options))
   end
+
+  def insert(resource, options \\ []) do
+    {:ok, insert!(resource, options)}
+  rescue
+    error -> {:error, error}
+  end
+
+  defp build_attrs(resource, options) do
+    overrides = options |> Keyword.get(:attrs, %{}) |> Map.new()
+
+    resource
+    |> generate()
+    |> Map.merge(overrides)
+  end
+
+  defp generate(Post),
+    do: %{title: Support.Random.sentence(), body: Support.Random.paragraph()}
+
+  defp generate(Author),
+    do: %{name: Support.Random.name()}
 end

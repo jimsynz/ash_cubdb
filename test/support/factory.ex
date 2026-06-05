@@ -3,11 +3,11 @@ defmodule Support.Factory do
   use Smokestack
 
   factory Support.Post do
-    attribute(:title, &Faker.Lorem.sentence/0)
-    attribute(:body, &Faker.Lorem.paragraph/0)
+    attribute(:title, &Support.Random.sentence/0)
+    attribute(:body, &Support.Random.paragraph/0)
   end
 
   factory Support.Author do
-    attribute(:name, &Faker.Person.name/0)
+    attribute(:name, &Support.Random.name/0)
   end
 end

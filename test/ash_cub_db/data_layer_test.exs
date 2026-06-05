@@ -3,7 +3,7 @@ defmodule AshCubDB.DataLayerTest do
   use ExUnit.Case, async: true
   alias Ash.{Error.Query.NotFound, Query}
   alias AshCubDB.Info
-  alias Support.{Author, Domain, Post}
+  alias Support.{Author, Post}
   import Support.Factory
   require Query
 
@@ -78,7 +78,7 @@ defmodule AshCubDB.DataLayerTest do
 
       params =
         params
-        |> Map.put(:title, Faker.Lorem.sentence())
+        |> Map.put(:title, Support.Random.sentence())
         |> Map.put(:id, post.id)
 
       assert {:ok, updated} = Post.create(params, upsert?: true)

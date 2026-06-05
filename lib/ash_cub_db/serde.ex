@@ -10,7 +10,7 @@ defmodule AshCubDB.Serde do
   @doc """
   Serialise the record into key and value tuples for storage in CubDB.
   """
-  @spec serialise(Resource.record()) :: {:ok, tuple, tuple} | {:error, any}
+  @spec serialise(Resource.Record.t()) :: {:ok, tuple, tuple} | {:error, any}
   def serialise(record) do
     {key_layout, data_layout} =
       record.__struct__
@@ -23,7 +23,7 @@ defmodule AshCubDB.Serde do
   end
 
   @doc false
-  @spec deserialise!(Resource.t(), {tuple, tuple}) :: Resource.record() | no_return
+  @spec deserialise!(Resource.t(), {tuple, tuple}) :: Resource.Record.t() | no_return
   def deserialise!(resource, {key, data}) do
     case deserialise(resource, key, data) do
       {:ok, record} -> record
@@ -34,7 +34,7 @@ defmodule AshCubDB.Serde do
   @doc """
   Convert the key and data back into a record..
   """
-  @spec deserialise(Resource.t(), tuple, tuple) :: {:ok, Resource.record()} | {:error, any}
+  @spec deserialise(Resource.t(), tuple, tuple) :: {:ok, Resource.Record.t()} | {:error, any}
   def deserialise(resource, key, data) do
     {key_layout, data_layout} = Info.field_layout(resource)
 

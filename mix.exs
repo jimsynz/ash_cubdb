@@ -47,7 +47,7 @@ defmodule AshCubDB.MixProject do
   def package do
     [
       maintainers: ["James Harton <james@harton.nz>"],
-      licenses: ["HL3-FULL"],
+      licenses: ["Apache-2.0"],
       links: %{
         "Source" => "https://harton.dev/james/ash_cubdb",
         "GitHub" => "https://github.com/jimsynz/ash_cubdb",

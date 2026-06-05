@@ -5,6 +5,12 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.6.5](https://harton.dev/james/ash_cubdb/compare/v0.6.4...v0.6.5) (2026-06-05)
+
+* remove smokestack dependency and work with Elixir 1.20.0.
+
+
+
 ## [v0.6.4](https://harton.dev/james/ash_cubdb/compare/v0.6.3...v0.6.4) (2026-06-05)
 
 

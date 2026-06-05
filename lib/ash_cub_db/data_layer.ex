@@ -67,14 +67,7 @@ defmodule AshCubDB.DataLayer do
   def can?(_, {:sort, _}), do: true
   def can?(_, :nested_expressions), do: true
 
-  def can?(resource, capability) do
-    if Application.get_env(:ash_cubdb, :debug_data_layer_capabilities?, false) do
-      # credo:disable-for-next-line Credo.Check.Warning.Dbg
-      dbg(resource: resource, capability: capability)
-    end
-
-    false
-  end
+  def can?(_resource, _capability), do: false
 
   @doc false
   @impl true

@@ -9,6 +9,8 @@ config :git_ops,
   manage_readme_version: "README.md"
 
 if Mix.env() in ~w[dev test]a do
+  config :ash, default_string_length_count: :codepoints
+
   config :ash_cubdb, ash_domains: [Support.Domain]
 
   config :spark, :formatter, remove_parens?: true

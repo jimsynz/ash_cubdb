@@ -46,7 +46,8 @@ defmodule AshCubDB.DataLayer do
 
   use Extension,
     sections: Dsl.sections(),
-    transformers: [ConfigureDirectoryTransformer, CacheLayoutTransformer]
+    transformers: [ConfigureDirectoryTransformer, CacheLayoutTransformer],
+    verifiers: [Ash.DataLayer.Verifiers.RequirePreCheckWith]
 
   @doc false
   @impl true

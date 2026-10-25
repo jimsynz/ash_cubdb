@@ -33,6 +33,10 @@ defmodule AshCubDB.Lock do
     :exit, {:timeout, _} ->
       GenServer.cast(name, {:cancel, ref})
       :timeout
+
+    # The lock stopped while the transaction waited for it.
+    :exit, reason ->
+      {:error, Exception.format_exit(reason)}
   end
 
   defp name(resource, tenant),

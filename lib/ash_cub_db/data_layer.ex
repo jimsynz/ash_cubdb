@@ -5,6 +5,7 @@ defmodule AshCubDB.DataLayer do
     Dir,
     Dsl,
     Info,
+    Lock,
     Query,
     Serde
   }
@@ -66,8 +67,187 @@ defmodule AshCubDB.DataLayer do
   def can?(_, :sort), do: true
   def can?(_, {:sort, _}), do: true
   def can?(_, :nested_expressions), do: true
+  def can?(_, :transact), do: true
 
   def can?(_resource, _capability), do: false
+
+  @undo :ash_cubdb_transaction_undo
+
+  # A transaction holds the lock of each resource it touches, so a read and the write that
+  # depends on it cannot interleave with another transaction's, and it records each key it
+  # changes, so a rollback can put it back. The resources an action touches are locked up
+  # front, in one order, and waited for; a resource first locked inside a transaction is
+  # tried once, so transactions never wait in a cycle. One that outlives its timeout is
+  # undone when it finishes, as a database refuses to commit.
+  @doc false
+  @impl true
+  def transaction(resource, func, timeout, reason) do
+    deadline = deadline(timeout)
+
+    {locks, mode} =
+      if holding_locks?() do
+        {[lock(resource, reason)], :try}
+      else
+        {transaction_locks(resource, reason), :wait}
+      end
+
+    locks
+    |> with_locks(mode, deadline, fn ->
+      Process.put(@undo, [%{} | Process.get(@undo, [])])
+
+      try do
+        result = func.()
+
+        if past?(deadline) do
+          undo()
+          :timeout
+        else
+          commit_undo()
+          {:res, result}
+        end
+      catch
+        {{:ash_cubdb_rollback, ^resource}, value} ->
+          undo()
+          {:error, value}
+
+        kind, error ->
+          undo()
+          :erlang.raise(kind, error, __STACKTRACE__)
+      end
+    end)
+    |> case do
+      {:res, result} ->
+        {:ok, result}
+
+      {:error, error} ->
+        {:error, error}
+
+      :timeout ->
+        {:error, Error.Invalid.Timeout.exception(timeout: timeout, name: name(reason, resource))}
+
+      :busy ->
+        {:error, "could not lock #{inspect(resource)}, first written inside another transaction"}
+    end
+  end
+
+  @doc false
+  @impl true
+  def rollback(resource, value), do: throw({{:ash_cubdb_rollback, resource}, value})
+
+  @doc false
+  @impl true
+  def in_transaction?(resource), do: Process.get({:ash_cubdb_transaction, resource}, false)
+
+  defp with_locks([], _mode, _deadline, fun), do: fun.()
+
+  defp with_locks([{resource, tenant} | locks], mode, deadline, fun) do
+    ref = make_ref()
+
+    case Lock.lock(resource, tenant, ref, mode, remaining(deadline)) do
+      :ok ->
+        Process.put({:ash_cubdb_transaction, resource}, true)
+
+        try do
+          with_locks(locks, mode, deadline, fun)
+        after
+          Process.delete({:ash_cubdb_transaction, resource})
+          Lock.unlock(resource, tenant, ref)
+        end
+
+      refused ->
+        refused
+    end
+  end
+
+  defp deadline(timeout) when is_integer(timeout),
+    do: System.monotonic_time(:millisecond) + timeout
+
+  defp deadline(_), do: :infinity
+
+  defp remaining(:infinity), do: :infinity
+  defp remaining(deadline), do: max(deadline - System.monotonic_time(:millisecond), 0)
+
+  defp past?(:infinity), do: false
+  defp past?(deadline), do: System.monotonic_time(:millisecond) > deadline
+
+  defp name(%{metadata: %{resource: resource, action: action}}, _) when is_atom(action),
+    do: "#{inspect(resource)}.#{action}"
+
+  defp name(_, resource), do: inspect(resource)
+
+  defp holding_locks? do
+    Enum.any?(Process.get_keys(true), &match?({:ash_cubdb_transaction, _}, &1))
+  end
+
+  defp transaction_locks(resource, reason) do
+    [resource | touched_resources(reason)]
+    |> Enum.filter(&(Ash.DataLayer.data_layer(&1) == __MODULE__))
+    |> Enum.map(&lock(&1, reason))
+    |> Enum.uniq()
+    |> Enum.sort()
+  end
+
+  # One store holds every tenant of a resource, under keys wrapped in the tenant, so
+  # tenants of a context-multitenant resource do not contend for one lock.
+  defp lock(resource, reason) do
+    tenant =
+      if Resource.Info.multitenancy_strategy(resource) == :context do
+        Map.get(reason, :tenant)
+      end
+
+    {resource, tenant}
+  end
+
+  defp touched_resources(%{metadata: %{resource: resource, action: action}})
+       when is_atom(action) do
+    case Resource.Info.action(resource, action) do
+      %{touches_resources: touches_resources} -> [resource | touches_resources]
+      _ -> [resource]
+    end
+  end
+
+  defp touched_resources(%{
+         metadata: %{query: %{action: %{touches_resources: touches_resources}}}
+       }),
+       do: touches_resources
+
+  defp touched_resources(_), do: []
+
+  # The value each key held before the transaction first changed it, `:error` for none, so
+  # a rollback restores the store to what it was. Outside a transaction, nothing to keep.
+  defp remember(db, keys) do
+    case Process.get(@undo) do
+      [changes | parents] ->
+        Process.put(@undo, [Enum.reduce(keys, changes, &record_prior(db, &1, &2)) | parents])
+        :ok
+
+      _ ->
+        :ok
+    end
+  end
+
+  defp record_prior(db, key, changes),
+    do: Map.put_new_lazy(changes, {db, key}, fn -> CubDB.fetch(db, key) end)
+
+  # A committed transaction inside another hands its changes to it, keeping what the outer
+  # one recorded first.
+  defp commit_undo do
+    case Process.get(@undo) do
+      [_changes] -> Process.delete(@undo)
+      [changes, outer | rest] -> Process.put(@undo, [Map.merge(changes, outer) | rest])
+    end
+  end
+
+  defp undo do
+    [changes | rest] = Process.get(@undo)
+
+    if rest == [], do: Process.delete(@undo), else: Process.put(@undo, rest)
+
+    Enum.each(changes, fn
+      {{db, key}, :error} -> CubDB.delete(db, key)
+      {{db, key}, {:ok, value}} -> CubDB.put(db, key, value)
+    end)
+  end
 
   @doc false
   @impl true
@@ -77,6 +257,7 @@ defmodule AshCubDB.DataLayer do
          {:ok, record} <- Changeset.apply_attributes(changeset),
          {:ok, key, data} <- Serde.serialise(record),
          {:ok, key} <- maybe_wrap_in_tenant(key, changeset),
+         :ok <- remember(db, [key]),
          :ok <- CubDB.put_new(db, key, data) do
       {:ok, set_loaded(record)}
     else
@@ -127,6 +308,7 @@ defmodule AshCubDB.DataLayer do
          {:ok, key, data} <- Serde.serialise(record),
          {:ok, key} <- maybe_wrap_in_tenant(key, changeset),
          true <- CubDB.has_key?(db, key),
+         :ok <- remember(db, [key]),
          :ok <- CubDB.put(db, key, data) do
       {:ok, set_loaded(record)}
     else
@@ -142,7 +324,8 @@ defmodule AshCubDB.DataLayer do
          {:ok, db} <- start(resource),
          {:ok, key, _data} <- Serde.serialise(changeset.data),
          {:ok, key} <- maybe_wrap_in_tenant(key, changeset),
-         true <- CubDB.has_key?(db, key) do
+         true <- CubDB.has_key?(db, key),
+         :ok <- remember(db, [key]) do
       CubDB.delete(db, key)
     else
       false -> {:error, StaleRecord.exception(resource: resource)}
@@ -228,6 +411,7 @@ defmodule AshCubDB.DataLayer do
          {:ok, record} <- Changeset.apply_attributes(changeset),
          {:ok, key, data} <- Serde.serialise(record),
          {:ok, key} <- maybe_wrap_in_tenant(key, changeset),
+         :ok <- remember(db, [key]),
          :ok <- CubDB.put(db, key, data) do
       {:ok, set_loaded(record)}
     end

@@ -4,6 +4,7 @@ defmodule AshCubDB.DataLayerTest do
   alias Ash.{Error.Query.NotFound, Query}
   alias AshCubDB.Info
   alias Support.{Author, Post}
+  import Spark.Test
   import Support.Factory
   require Query
 
@@ -18,6 +19,63 @@ defmodule AshCubDB.DataLayerTest do
     test "it correctly infers the data directory" do
       assert {:ok, path} = Info.cubdb_directory(Post)
       assert path =~ ~r/ash_cubdb\/priv\/cubdb\/post$/
+    end
+  end
+
+  describe "verifier" do
+    test "an identity must be checked with `pre_check_with`" do
+      error =
+        assert_dsl_error %Spark.Error.DslError{} do
+          defmodule Elixir.AshCubDB.DataLayerTest.UncheckedIdentity do
+            @moduledoc false
+            use Ash.Resource, data_layer: AshCubDB.DataLayer
+
+            cubdb do
+              otp_app :ash_cubdb
+            end
+
+            actions do
+              defaults [:read]
+            end
+
+            attributes do
+              uuid_primary_key :id
+              attribute :email, :string, public?: true
+            end
+
+            identities do
+              identity :unique_email, [:email]
+            end
+          end
+        end
+
+      assert error.message =~ "Must specify the `pre_check_with` option."
+    end
+
+    test "an identity checked with `pre_check_with` is accepted" do
+      refute_dsl_errors do
+        defmodule Elixir.AshCubDB.DataLayerTest.CheckedIdentity do
+          @moduledoc false
+          use Ash.Resource, data_layer: AshCubDB.DataLayer
+
+          cubdb do
+            otp_app :ash_cubdb
+          end
+
+          actions do
+            defaults [:read]
+          end
+
+          attributes do
+            uuid_primary_key :id
+            attribute :email, :string, public?: true
+          end
+
+          identities do
+            identity :unique_email, [:email], pre_check_with: Support.Domain
+          end
+        end
+      end
     end
   end
 

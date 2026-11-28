@@ -78,7 +78,7 @@ defmodule AshCubDB.MixProject do
       {:ex_check, "~> 0.17", opts},
       {:ex_doc, ">= 0.0.0", opts},
       {:git_ops, "~> 2.6", opts},
-      {:igniter, "~> 0.8", Keyword.put(opts, :optional, true)},
+      {:igniter, "~> 0.9", Keyword.put(opts, :optional, true)},
       {:mix_audit, "~> 2.1", opts}
     ]
   end
